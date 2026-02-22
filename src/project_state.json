@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 5,
+  "summary": "A second-hand bike marketplace website similar to Bike Bazaar, featuring bike listings with photos and details, search and filter capabilities, user authentication via Internet Identity, and a messaging system for buyers to contact sellers",
+  "architectural_notes": [
+    "Marketplace website for second-hand bikes",
+    "Internet Identity integration for user authentication",
+    "Founder details stored in backend: Anuj Saha, Bijapur Chhattisgarh, contact/WhatsApp: 7828226397, email: rohitmarpalli@gmail.com, Instagram: https://www.instagram.com/annujj_03_",
+    "Role-based access control: founder account (rohitmarpalli@gmail.com) has admin privileges",
+    "PWA implementation for mobile app-like experience",
+    "WhatsApp integration using Click to Chat API with number 7828226397",
+    "Social media integration on About Us and Founder pages"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Professional modern logo for 2nd Bike Bajar Bijapur featuring a motorcycle icon with clean typography in teal and orange accent colors suitable for a trusted second-hand bike marketplace (logo.dim_512x512.png)\n- PWA app icon with the 2nd Bike Bajar logo optimized for mobile home screens with solid background (pwa-icon-192.dim_192x192.png)\n- PWA app icon with the 2nd Bike Bajar logo optimized for high-resolution mobile displays (pwa-icon-512.dim_512x512.png)",
+  "existing_features": [
+    {
+      "id": "feature-build-a-bike-listings-gallery-page-showing-all-available-bikes-in-a-grid-layout-with-thumbnail-images-title-price-year-and-mileage-visible-on-each-card",
+      "title": "Build a bike listings gallery page showing all available bikes in a grid layout with thumbnail images, title, price, year, and mileage visible on each card",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-detailed-bike-view-page-displaying-all-bike-information-including-multiple-photos-in-a-gallery-full-description-specifications-seller-information-and-a-contact-button",
+      "title": "Create a detailed bike view page displaying all bike information including multiple photos in a gallery, full description, specifications, seller information, and a contact button",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-search-functionality-allowing-users-to-search-bikes-by-title-brand-or-model-with-real-time-filtering-as-they-type",
+      "title": "Implement search functionality allowing users to search bikes by title, brand, or model with real-time filtering as they type",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-filter-controls-for-price-range-min-max-year-range-condition-and-brand-with-the-ability-to-apply-multiple-filters-simultaneously",
+      "title": "Add filter controls for price range (min/max), year range, condition, and brand with the ability to apply multiple filters simultaneously",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-internet-identity-authentication-allowing-users-to-sign-in-and-manage-their-own-bike-listings",
+      "title": "Integrate Internet Identity authentication allowing users to sign in and manage their own bike listings",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-sell-your-bike-form-for-authenticated-users-to-list-a-new-bike-with-fields-for-all-bike-details-and-the-ability-to-upload-multiple-photos",
+      "title": "Create a 'Sell Your Bike' form for authenticated users to list a new bike with fields for all bike details and the ability to upload multiple photos",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-messaging-interface-that-allows-buyers-to-send-inquiries-to-sellers-about-specific-bikes-and-view-conversation-history",
+      "title": "Create a messaging interface that allows buyers to send inquiries to sellers about specific bikes and view conversation history",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-creative-and-cohesive-visual-theme-with-a-distinct-style-for-the-marketplace-that-evokes-trust-quality-and-the-excitement-of-finding-great-second-hand-bikes-applying-consistent-colors-typography-and-layout-patterns-throughout-the-application",
+      "title": "Design a creative and cohesive visual theme with a distinct style for the marketplace that evokes trust, quality, and the excitement of finding great second-hand bikes, applying consistent colors, typography, and layout patterns throughout the application",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-convert-the-website-to-a-progressive-web-app-pwa-by-adding-a-web-app-manifest-file-with-appropriate-icons-theme-colors-and-display-mode-set-to-standalone-and-register-a-service-worker-to-enable-offline-capabilities-and-home-screen-installation-on-mobile-devices",
+      "title": "Convert the website to a Progressive Web App (PWA) by adding a web app manifest file with appropriate icons, theme colors, and display mode set to standalone, and register a service worker to enable offline capabilities and home screen installation on mobile devices",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-about-us-founder-page-displaying-founder-information-including-name-anuj-saha-location-bijapur-chhattisgarh-contact-number-7828226397-email-rohitmarpalli-gmail-com-and-instagram-profile-link-https-www-instagram-com-annujj-03-with-a-whatsapp-icon-that-opens-a-direct-chat-to-the-founder-s-number-when-clicked",
+      "title": "Create an About Us/Founder page displaying founder information including name (Anuj Saha), location (Bijapur, Chhattisgarh), contact number (7828226397), email (rohitmarpalli@gmail.com), and Instagram profile link (https://www.instagram.com/annujj_03_), with a WhatsApp icon that opens a direct chat to the founder's number when clicked",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-dedicated-founder-admin-panel-page-visible-only-to-the-founder-identified-by-rohitmarpalli-gmail-com-linked-account-that-displays-all-bike-listings-in-the-marketplace-with-options-to-edit-or-delete-any-listing-regardless-of-ownership",
+      "title": "Create a dedicated Founder Admin Panel page visible only to the founder (identified by rohitmarpalli@gmail.com linked account) that displays all bike listings in the marketplace with options to edit or delete any listing regardless of ownership",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-founder-profile-editor-in-the-admin-panel-that-allows-the-founder-to-update-their-details-including-name-address-contact-number-email-address-and-instagram-profile-link-with-all-changes-persisted-in-the-backend",
+      "title": "Add a founder profile editor in the Admin Panel that allows the founder to update their details including name, address, contact number, email address, and Instagram profile link, with all changes persisted in the backend",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Bike listings with photos and details",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Search and filter capabilities for bike listings",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "User authentication via Internet Identity",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Messaging system for buyers to contact sellers",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Create a data model for bike listings with fields: id, title, brand, model, year, price, mileage, condition (excellent/good/fair), description, seller contact information, listing date, and availability status",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Implement backend functions to create, read, update, and delete bike listings with proper authorization so sellers can only modify their own listings",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Build a messaging system backend that stores conversations between buyers and sellers associated with specific bike listings",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Create an About Us/Founder page displaying founder information (name, address, contact number, Instagram link) with social media icons that open direct WhatsApp chat and link to Instagram profile",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Implement founder admin panel allowing the founder to edit their own details (name, address, contact number, email, Instagram link) and manage bike listings",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add automatic role detection to distinguish founder (rohitmarpalli@gmail.com linked account) from regular buyers using Internet Identity authentication",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Convert website to a Progressive Web App (PWA) that is mobile-friendly and can be added to device home screens",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Upgrade logo and visual theme to be more professional, clean, and modern for 2nd Bike Bajar Bijapur marketplace",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Implement automatic role detection in the backend to identify the founder account by matching the Internet Identity principal to the email rohitmarpalli@gmail.com, storing this mapping in stable storage, and exposing a backend function that returns whether the current caller is the founder",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Extend backend authorization rules to grant the founder account admin privileges allowing them to edit or delete any bike listing in the marketplace, not just their own",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Bike Bazaar",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

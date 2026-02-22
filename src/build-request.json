@@ -1,0 +1,151 @@
+{
+  "kind": "build_request",
+  "title": "Retry complete build and deployment of 2nd Bike Bajar marketplace",
+  "projectName": "2nd Bike Bajar",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-12",
+      "text": "Convert the website to a Progressive Web App (PWA) by adding a web app manifest file with appropriate icons, theme colors, and display mode set to standalone, and register a service worker to enable offline capabilities and home screen installation on mobile devices",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1",
+          "msg-3",
+          "msg-11"
+        ],
+        "quotes": [
+          "PWA App banado",
+          "Progressive Web App (PWA) - जो mobile पर बिल्कुल app जैसा काम करेगा, users इसे अपने phone की home screen पर add कर सकेंगे"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Web app manifest file exists with proper metadata for 2nd Bike Bajar",
+        "Service worker is registered and caches essential assets",
+        "Users can add the website to their device home screen",
+        "App opens in standalone mode without browser UI when launched from home screen"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Create an About Us/Founder page displaying founder information including name (Anuj Saha), location (Bijapur, Chhattisgarh), contact number (7828226397), email (rohitmarpalli@gmail.com), and Instagram profile link (https://www.instagram.com/annujj_03_), with a WhatsApp icon that opens a direct chat to the founder's number when clicked",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-11"
+        ],
+        "quotes": [
+          "Founder की पूरी जानकारी: Anuj Saha, Bijapur Chhattisgarh, 7828226397, rohitmarpalli@gmail.com",
+          "WhatsApp आइकन क्लिक करने पर डायरेक्ट चैट ओपन होगी"
+        ]
+      },
+      "acceptanceCriteria": [
+        "About Us page displays all founder details accurately",
+        "WhatsApp icon opens WhatsApp chat to 7828226397 when clicked",
+        "Instagram icon links to https://www.instagram.com/annujj_03_",
+        "Page design is consistent with the overall theme"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Implement automatic role detection in the backend to identify the founder account by matching the Internet Identity principal to the email rohitmarpalli@gmail.com, storing this mapping in stable storage, and exposing a backend function that returns whether the current caller is the founder",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-5",
+          "msg-6"
+        ],
+        "quotes": [
+          "सभी users (buyers और founder दोनों) एक ही Internet Identity authentication से login करें और सिस्टम automatically पहचाने कि कौन founder है",
+          "Automatic Role Detection - system खुद पहचानेगा कि logged-in user founder है (rohitmarpalli@gmail.com से linked account) या regular buyer"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend stores mapping between founder's Internet Identity principal and email",
+        "Backend function returns true if caller is the founder, false otherwise",
+        "Founder identification persists across canister upgrades"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "Create a dedicated Founder Admin Panel page visible only to the founder (identified by rohitmarpalli@gmail.com linked account) that displays all bike listings in the marketplace with options to edit or delete any listing regardless of ownership",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-11"
+        ],
+        "quotes": [
+          "Founder के लिए Dedicated Admin Panel जहां: अपनी बाइक्स को लिस्ट, एडिट, और डिलीट कर सकेंगे, सभी बाइक लिस्टिंग्स को मैनेज कर सकें"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin panel page is only visible/accessible to the founder account",
+        "Displays all bike listings in the marketplace",
+        "Provides edit and delete actions for any listing",
+        "Regular buyers cannot access this page"
+      ]
+    },
+    {
+      "id": "REQ-16",
+      "text": "Add a founder profile editor in the Admin Panel that allows the founder to update their details including name, address, contact number, email address, and Instagram profile link, with all changes persisted in the backend",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-1",
+          "msg-2"
+        ],
+        "quotes": [
+          "founder ke mail id ko edit ya pir change karne ka option bi hona chaiye",
+          "Founder details (name, address, contact: 7828226397, email, Instagram) edit kर सकें"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Founder can edit their name, address, contact number, email, and Instagram link",
+        "Changes are saved to the backend and persist across sessions",
+        "Updated information appears on the About Us page",
+        "Form validates email format before saving"
+      ]
+    },
+    {
+      "id": "REQ-17",
+      "text": "Extend backend authorization rules to grant the founder account admin privileges allowing them to edit or delete any bike listing in the marketplace, not just their own",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-11"
+        ],
+        "quotes": [
+          "सभी बाइक लिस्टिंग्स को मैनेज कर सकें"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Founder can call edit/delete functions on any bike listing",
+        "Regular users can still only edit/delete their own listings",
+        "Backend properly validates founder status before granting admin access"
+      ]
+    }
+  ],
+  "constraints": [
+    "Use Internet Identity authentication only; no email/SMS OTP integration",
+    "Backend must use single-actor architecture with all logic in main.mo",
+    "Do not modify immutable frontend paths: useInternetIdentity.ts, useInternetIdentity.tsx, useActor.ts, main.tsx, components/ui",
+    "Must support founder identification via email rohitmarpalli@gmail.com linked to their Internet Identity principal"
+  ],
+  "nonGoals": [
+    "Creating a separate Play Store native mobile app",
+    "Implementing email or SMS OTP authentication",
+    "Building separate authentication systems for buyers and founders",
+    "Integrating third-party services like Twilio or SendGrid"
+  ],
+  "imageRequirements": {
+    "required": [
+      "Professional modern logo for 2nd Bike Bajar Bijapur featuring a motorcycle icon with clean typography in teal and orange accent colors suitable for a trusted second-hand bike marketplace (logo.dim_512x512.png)",
+      "PWA app icon with the 2nd Bike Bajar logo optimized for mobile home screens with solid background (pwa-icon-192.dim_192x192.png)",
+      "PWA app icon with the 2nd Bike Bajar logo optimized for high-resolution mobile displays (pwa-icon-512.dim_512x512.png)"
+    ],
+    "edits": []
+  }
+}
