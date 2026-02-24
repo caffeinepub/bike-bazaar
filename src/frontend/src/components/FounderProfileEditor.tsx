@@ -5,13 +5,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
-import { useGetFounderProfile, useUpdateFounderProfile } from '../hooks/useQueries';
+import { useUpdateFounderProfile } from '../hooks/useQueries';
 import type { FounderProfile } from '../backend';
 
 export default function FounderProfileEditor() {
-  const { data: founderProfile, isLoading } = useGetFounderProfile();
   const updateProfile = useUpdateFounderProfile();
   const [isEditing, setIsEditing] = useState(false);
+
+  // Default founder profile values
+  const defaultProfile: FounderProfile = {
+    name: 'Anuj Saha',
+    address: 'Bijapur, Chhattisgarh',
+    contactNumber: '7828226397',
+    emailAddress: 'rohitmarpalli@gmail.com',
+    instagramProfile: 'https://www.instagram.com/annujj_03_?igsh=MXdocnV1bjF0bDR6bQ==',
+  };
 
   const {
     register,
@@ -19,29 +27,12 @@ export default function FounderProfileEditor() {
     reset,
     formState: { errors },
   } = useForm<FounderProfile>({
-    defaultValues: {
-      name: '',
-      address: '',
-      contactNumber: '',
-      emailAddress: '',
-      instagramProfile: '',
-    },
+    defaultValues: defaultProfile,
   });
 
   useEffect(() => {
-    if (founderProfile) {
-      reset(founderProfile);
-    } else {
-      // Set default values if no profile exists
-      reset({
-        name: 'Anuj Saha',
-        address: 'Bijapur, Chhattisgarh',
-        contactNumber: '7828226397',
-        emailAddress: 'rohitmarpalli@gmail.com',
-        instagramProfile: 'https://www.instagram.com/annujj_03_?igsh=MXdocnV1bjF0bDR6bQ==',
-      });
-    }
-  }, [founderProfile, reset]);
+    reset(defaultProfile);
+  }, [reset]);
 
   const onSubmit = async (data: FounderProfile) => {
     try {
@@ -54,45 +45,29 @@ export default function FounderProfileEditor() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   if (!isEditing) {
-    const profile = founderProfile || {
-      name: 'Anuj Saha',
-      address: 'Bijapur, Chhattisgarh',
-      contactNumber: '7828226397',
-      emailAddress: 'rohitmarpalli@gmail.com',
-      instagramProfile: 'https://www.instagram.com/annujj_03_?igsh=MXdocnV1bjF0bDR6bQ==',
-    };
-
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <p className="text-sm font-medium text-muted-foreground">Name</p>
-            <p className="text-base">{profile.name}</p>
+            <p className="text-base">{defaultProfile.name}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-muted-foreground">Address</p>
-            <p className="text-base">{profile.address}</p>
+            <p className="text-base">{defaultProfile.address}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-muted-foreground">Contact Number</p>
-            <p className="text-base">{profile.contactNumber}</p>
+            <p className="text-base">{defaultProfile.contactNumber}</p>
           </div>
           <div>
             <p className="text-sm font-medium text-muted-foreground">Email</p>
-            <p className="text-base">{profile.emailAddress}</p>
+            <p className="text-base">{defaultProfile.emailAddress}</p>
           </div>
           <div className="md:col-span-2">
             <p className="text-sm font-medium text-muted-foreground">Instagram Profile</p>
-            <p className="text-base truncate">{profile.instagramProfile}</p>
+            <p className="text-base truncate">{defaultProfile.instagramProfile}</p>
           </div>
         </div>
         <Button onClick={() => setIsEditing(true)}>Edit Profile</Button>

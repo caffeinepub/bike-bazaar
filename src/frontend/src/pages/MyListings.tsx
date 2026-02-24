@@ -1,13 +1,14 @@
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetMyListings, useDeleteListing, useUpdateListing } from '../hooks/useQueries';
+import { useGetMyListings, useDeleteListing, useUpdateListing, useIsFounder } from '../hooks/useQueries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Trash2, Edit, Eye } from 'lucide-react';
+import { AlertCircle, Trash2, Eye, Share2 } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { toast } from 'sonner';
+import ProfileShareButtons from '../components/ProfileShareButtons';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,11 +20,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 export default function MyListings() {
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
   const { data: listings, isLoading, error } = useGetMyListings();
+  const { data: isFounder } = useIsFounder();
   const { mutate: deleteListing } = useDeleteListing();
   const { mutate: updateListing } = useUpdateListing();
 
@@ -92,6 +102,38 @@ export default function MyListings() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Share Buttons at Top */}
+      <div className="mb-8 p-6 bg-card border rounded-lg">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-semibold">Share Your Profile</h2>
+            <p className="text-sm text-muted-foreground">Share your seller profile with potential buyers</p>
+          </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <Share2 className="h-4 w-4" />
+                Share
+              </Button>
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Share Your Profile</SheetTitle>
+                <SheetDescription>
+                  Share your profile link on social media or copy it to share anywhere
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6">
+                <ProfileShareButtons userRole="seller" />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+        <div className="lg:hidden">
+          <ProfileShareButtons userRole="seller" />
+        </div>
+      </div>
+
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-4xl font-bold">My Listings</h1>
         <Link to="/sell">
@@ -132,7 +174,7 @@ export default function MyListings() {
                 />
                 <div className="space-y-2">
                   <p className="text-2xl font-bold text-primary">
-                    ${Number(listing.price).toLocaleString()}
+                    ₹{Number(listing.price).toLocaleString()}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {listing.brand} {listing.model} • {Number(listing.year)}
@@ -140,7 +182,7 @@ export default function MyListings() {
                 </div>
               </CardContent>
               <CardFooter className="flex gap-2">
-                <Link to="/listings/$id" params={{ id: listing.id }} className="flex-1">
+                <Link to="/bike/$id" params={{ id: listing.id }} className="flex-1">
                   <Button variant="outline" size="sm" className="w-full gap-2">
                     <Eye className="h-4 w-4" />
                     View

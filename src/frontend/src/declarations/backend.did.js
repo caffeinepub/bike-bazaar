@@ -19,6 +19,12 @@ export const _CaffeineStorageRefillResult = IDL.Record({
   'success' : IDL.Opt(IDL.Bool),
   'topped_up_amount' : IDL.Opt(IDL.Nat),
 });
+export const UsageStat = IDL.Record({
+  'visitors' : IDL.Nat,
+  'listings' : IDL.Nat,
+  'timestamp' : IDL.Int,
+  'users' : IDL.Nat,
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -28,6 +34,20 @@ export const Condition = IDL.Variant({
   'fair' : IDL.Null,
   'good' : IDL.Null,
   'excellent' : IDL.Null,
+});
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
+export const BuyerProfile = IDL.Record({
+  'aadhaarDocument' : IDL.Opt(ExternalBlob),
+  'createdAt' : IDL.Int,
+  'profilePhoto' : IDL.Opt(ExternalBlob),
+  'panDocument' : IDL.Opt(ExternalBlob),
+  'fullName' : IDL.Text,
+  'isProfileComplete' : IDL.Bool,
+  'email' : IDL.Text,
+  'address' : IDL.Text,
+  'panNumber' : IDL.Text,
+  'aadhaarNumber' : IDL.Text,
+  'phoneNumber' : IDL.Text,
 });
 export const BikeListing = IDL.Record({
   'id' : IDL.Text,
@@ -43,6 +63,12 @@ export const BikeListing = IDL.Record({
   'brand' : IDL.Text,
   'price' : IDL.Nat,
   'condition' : Condition,
+});
+export const AnalyticsData = IDL.Record({
+  'activeListings' : IDL.Nat,
+  'totalVisitors' : IDL.Nat,
+  'usageStats' : IDL.Vec(UsageStat),
+  'registeredUsers' : IDL.Nat,
 });
 export const UserProfile = IDL.Record({
   'contactInfo' : IDL.Text,
@@ -62,6 +88,11 @@ export const Message = IDL.Record({
   'sender' : IDL.Principal,
   'timestamp' : IDL.Int,
   'receiver' : IDL.Principal,
+});
+export const WebsiteContent = IDL.Record({
+  'heroSection' : IDL.Text,
+  'aboutPage' : IDL.Text,
+  'footerInfo' : IDL.Text,
 });
 
 export const idlService = IDL.Service({
@@ -92,7 +123,15 @@ export const idlService = IDL.Service({
     ),
   '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addUsageStat' : IDL.Func([UsageStat], [], []),
+  'adminLogin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'completeBuyerProfile' : IDL.Func([], [], []),
+  'createBuyerProfile' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
   'createListing' : IDL.Func(
       [
         IDL.Text,
@@ -109,20 +148,30 @@ export const idlService = IDL.Service({
       [],
     ),
   'deleteListing' : IDL.Func([IDL.Text], [], []),
+  'getAllBuyerProfiles' : IDL.Func([], [IDL.Vec(BuyerProfile)], ['query']),
   'getAllListings' : IDL.Func([], [IDL.Vec(BikeListing)], ['query']),
+  'getAnalyticsData' : IDL.Func([], [AnalyticsData], ['query']),
   'getAvailableListings' : IDL.Func([], [IDL.Vec(BikeListing)], ['query']),
+  'getBuyerProfile' : IDL.Func(
+      [IDL.Principal],
+      [IDL.Opt(BuyerProfile)],
+      ['query'],
+    ),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getFounderProfile' : IDL.Func([], [IDL.Opt(FounderProfile)], ['query']),
   'getListing' : IDL.Func([IDL.Text], [BikeListing], ['query']),
   'getMessagesForListing' : IDL.Func([IDL.Text], [IDL.Vec(Message)], ['query']),
+  'getMyBuyerProfile' : IDL.Func([], [IDL.Opt(BuyerProfile)], ['query']),
   'getMyListings' : IDL.Func([], [IDL.Vec(BikeListing)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'getWebsiteContent' : IDL.Func([], [WebsiteContent], ['query']),
   'initializeFounder' : IDL.Func([], [], []),
+  'isBuyerProfileComplete' : IDL.Func([], [IDL.Bool], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'isFounder' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
@@ -155,6 +204,10 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
+  'updateWebsiteContent' : IDL.Func([WebsiteContent], [], []),
+  'uploadAadhaarDocument' : IDL.Func([ExternalBlob], [], []),
+  'uploadPanDocument' : IDL.Func([ExternalBlob], [], []),
+  'uploadProfilePhoto' : IDL.Func([ExternalBlob], [], []),
 });
 
 export const idlInitArgs = [];
@@ -171,6 +224,12 @@ export const idlFactory = ({ IDL }) => {
     'success' : IDL.Opt(IDL.Bool),
     'topped_up_amount' : IDL.Opt(IDL.Nat),
   });
+  const UsageStat = IDL.Record({
+    'visitors' : IDL.Nat,
+    'listings' : IDL.Nat,
+    'timestamp' : IDL.Int,
+    'users' : IDL.Nat,
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -180,6 +239,20 @@ export const idlFactory = ({ IDL }) => {
     'fair' : IDL.Null,
     'good' : IDL.Null,
     'excellent' : IDL.Null,
+  });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
+  const BuyerProfile = IDL.Record({
+    'aadhaarDocument' : IDL.Opt(ExternalBlob),
+    'createdAt' : IDL.Int,
+    'profilePhoto' : IDL.Opt(ExternalBlob),
+    'panDocument' : IDL.Opt(ExternalBlob),
+    'fullName' : IDL.Text,
+    'isProfileComplete' : IDL.Bool,
+    'email' : IDL.Text,
+    'address' : IDL.Text,
+    'panNumber' : IDL.Text,
+    'aadhaarNumber' : IDL.Text,
+    'phoneNumber' : IDL.Text,
   });
   const BikeListing = IDL.Record({
     'id' : IDL.Text,
@@ -195,6 +268,12 @@ export const idlFactory = ({ IDL }) => {
     'brand' : IDL.Text,
     'price' : IDL.Nat,
     'condition' : Condition,
+  });
+  const AnalyticsData = IDL.Record({
+    'activeListings' : IDL.Nat,
+    'totalVisitors' : IDL.Nat,
+    'usageStats' : IDL.Vec(UsageStat),
+    'registeredUsers' : IDL.Nat,
   });
   const UserProfile = IDL.Record({
     'contactInfo' : IDL.Text,
@@ -214,6 +293,11 @@ export const idlFactory = ({ IDL }) => {
     'sender' : IDL.Principal,
     'timestamp' : IDL.Int,
     'receiver' : IDL.Principal,
+  });
+  const WebsiteContent = IDL.Record({
+    'heroSection' : IDL.Text,
+    'aboutPage' : IDL.Text,
+    'footerInfo' : IDL.Text,
   });
   
   return IDL.Service({
@@ -244,7 +328,15 @@ export const idlFactory = ({ IDL }) => {
       ),
     '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addUsageStat' : IDL.Func([UsageStat], [], []),
+    'adminLogin' : IDL.Func([IDL.Text, IDL.Text], [IDL.Bool], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'completeBuyerProfile' : IDL.Func([], [], []),
+    'createBuyerProfile' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
     'createListing' : IDL.Func(
         [
           IDL.Text,
@@ -261,8 +353,15 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'deleteListing' : IDL.Func([IDL.Text], [], []),
+    'getAllBuyerProfiles' : IDL.Func([], [IDL.Vec(BuyerProfile)], ['query']),
     'getAllListings' : IDL.Func([], [IDL.Vec(BikeListing)], ['query']),
+    'getAnalyticsData' : IDL.Func([], [AnalyticsData], ['query']),
     'getAvailableListings' : IDL.Func([], [IDL.Vec(BikeListing)], ['query']),
+    'getBuyerProfile' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(BuyerProfile)],
+        ['query'],
+      ),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getFounderProfile' : IDL.Func([], [IDL.Opt(FounderProfile)], ['query']),
@@ -272,13 +371,16 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Vec(Message)],
         ['query'],
       ),
+    'getMyBuyerProfile' : IDL.Func([], [IDL.Opt(BuyerProfile)], ['query']),
     'getMyListings' : IDL.Func([], [IDL.Vec(BikeListing)], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
+    'getWebsiteContent' : IDL.Func([], [WebsiteContent], ['query']),
     'initializeFounder' : IDL.Func([], [], []),
+    'isBuyerProfileComplete' : IDL.Func([], [IDL.Bool], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'isFounder' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
@@ -311,6 +413,10 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
+    'updateWebsiteContent' : IDL.Func([WebsiteContent], [], []),
+    'uploadAadhaarDocument' : IDL.Func([ExternalBlob], [], []),
+    'uploadPanDocument' : IDL.Func([ExternalBlob], [], []),
+    'uploadProfilePhoto' : IDL.Func([ExternalBlob], [], []),
   });
 };
 

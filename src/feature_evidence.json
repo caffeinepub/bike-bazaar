@@ -2,34 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-convert-the-website-to-a-progressive-web-app-pwa-by-adding-a-web-app-manifest-file-with-appropriate-icons-theme-colors-and-display-mode-set-to-standalone-and-register-a-service-worker-to-enable-offline-capabilities-and-home-screen-installation-on-mobile-devices",
-      "featureTitle": "Convert the website to a Progressive Web App (PWA) by adding a web app manifest file with appropriate icons, theme colors, and display mode set to standalone, and register a service worker to enable offline capabilities and home screen installation on mobile devices",
+      "featureId": "feature-update-the-about-us-page-frontend-src-pages-aboutus-tsx-to-display-founder-details-name-anuj-kumar-contact-number-7828226397-whatsapp-number-7828226397-and-location-bijapur-chhattisgarh-494444",
+      "featureTitle": "Update the About Us page (frontend/src/pages/AboutUs.tsx) to display founder details: name 'Anuj Kumar', contact number '7828226397', WhatsApp number '7828226397', and location 'Bijapur Chhattisgarh 494444'",
       "files": [
-        "frontend/index.html",
-        "frontend/public/manifest.json",
-        "frontend/public/service-worker.js"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-an-about-us-founder-page-displaying-founder-information-including-name-anuj-saha-location-bijapur-chhattisgarh-contact-number-7828226397-email-rohitmarpalli-gmail-com-and-instagram-profile-link-https-www-instagram-com-annujj-03-with-a-whatsapp-icon-that-opens-a-direct-chat-to-the-founder-s-number-when-clicked",
-      "featureTitle": "Create an About Us/Founder page displaying founder information including name (Anuj Saha), location (Bijapur, Chhattisgarh), contact number (7828226397), email (rohitmarpalli@gmail.com), and Instagram profile link (https://www.instagram.com/annujj_03_), with a WhatsApp icon that opens a direct chat to the founder's number when clicked",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Footer.tsx",
-        "frontend/src/components/Header.tsx",
         "frontend/src/pages/AboutUs.tsx"
       ],
       "components": [
@@ -42,51 +17,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-13"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-dedicated-founder-admin-panel-page-visible-only-to-the-founder-identified-by-rohitmarpalli-gmail-com-linked-account-that-displays-all-bike-listings-in-the-marketplace-with-options-to-edit-or-delete-any-listing-regardless-of-ownership",
-      "featureTitle": "Create a dedicated Founder Admin Panel page visible only to the founder (identified by rohitmarpalli@gmail.com linked account) that displays all bike listings in the marketplace with options to edit or delete any listing regardless of ownership",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/Header.tsx",
-        "frontend/src/pages/AdminPanel.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-15"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-founder-profile-editor-in-the-admin-panel-that-allows-the-founder-to-update-their-details-including-name-address-contact-number-email-address-and-instagram-profile-link-with-all-changes-persisted-in-the-backend",
-      "featureTitle": "Add a founder profile editor in the Admin Panel that allows the founder to update their details including name, address, contact number, email address, and Instagram profile link, with all changes persisted in the backend",
-      "files": [
-        "frontend/src/components/FounderProfileEditor.tsx",
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AdminPanel.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "blob-storage@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-16"
+        "REQ-3"
       ],
       "confidence": "high"
     }

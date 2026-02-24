@@ -1,42 +1,43 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { MapPin, Phone, Mail } from 'lucide-react';
 import { SiInstagram, SiWhatsapp } from 'react-icons/si';
-import { useGetFounderProfile } from '../hooks/useQueries';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useGetWebsiteContent } from '../hooks/useQueries';
 
 export default function AboutUs() {
-  const { data: founderProfile, isLoading } = useGetFounderProfile();
+  const { data: content, isLoading } = useGetWebsiteContent();
+
+  // Founder profile with updated details
+  const profile = {
+    name: 'Anuj Kumar',
+    address: 'Bijapur Chhattisgarh 494444',
+    contactNumber: '7828226397',
+    whatsappNumber: '7828226397',
+    emailAddress: 'rohitmarpalli@gmail.com',
+    instagramProfile: 'https://www.instagram.com/annujj_03_?igsh=MXdocnV1bjF0bDR6bQ==',
+  };
+
+  const whatsappLink = `https://wa.me/91${profile.whatsappNumber}`;
+  const telLink = `tel:+91${profile.contactNumber}`;
 
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <Skeleton className="h-12 w-64 mb-8" />
-          <Card>
+          <Card className="mb-8">
             <CardHeader>
               <Skeleton className="h-8 w-48" />
             </CardHeader>
-            <CardContent className="space-y-4">
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-6 w-full" />
-              <Skeleton className="h-6 w-3/4" />
+            <CardContent>
+              <Skeleton className="h-64 w-full" />
             </CardContent>
           </Card>
         </div>
       </div>
     );
   }
-
-  const profile = founderProfile || {
-    name: 'Anuj Saha',
-    address: 'Bijapur, Chhattisgarh',
-    contactNumber: '7828226397',
-    emailAddress: 'rohitmarpalli@gmail.com',
-    instagramProfile: 'https://www.instagram.com/annujj_03_?igsh=MXdocnV1bjF0bDR6bQ==',
-  };
-
-  const whatsappLink = `https://wa.me/91${profile.contactNumber}`;
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -67,7 +68,27 @@ export default function AboutUs() {
                   <Phone className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="font-medium">Contact Number</p>
-                    <p className="text-muted-foreground">{profile.contactNumber}</p>
+                    <a 
+                      href={telLink}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {profile.contactNumber}
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <SiWhatsapp className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">WhatsApp Number</p>
+                    <a 
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {profile.whatsappNumber}
+                    </a>
                   </div>
                 </div>
 
@@ -125,13 +146,13 @@ export default function AboutUs() {
             <CardTitle>Our Mission</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground leading-relaxed">
-              At 2nd Bike Bajar Bijapur, we're committed to making quality second-hand bikes accessible 
-              to everyone in Bijapur and surrounding areas. We believe in transparency, trust, and 
-              providing excellent service to both buyers and sellers. Whether you're looking to buy 
-              your first bike or sell one you no longer need, we're here to help make the process 
-              smooth and reliable.
-            </p>
+            <div className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {content?.aboutPage || `At 2nd Bike Bajar Bijapur, we're committed to making quality second-hand bikes accessible 
+to everyone in Bijapur and surrounding areas. We believe in transparency, trust, and 
+providing excellent service to both buyers and sellers. Whether you're looking to buy 
+your first bike or sell one you no longer need, we're here to help make the process 
+smooth and reliable.`}
+            </div>
           </CardContent>
         </Card>
       </div>

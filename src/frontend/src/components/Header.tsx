@@ -2,14 +2,17 @@ import { Link, useNavigate } from '@tanstack/react-router';
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import LoginButton from './LoginButton';
+import { Button } from '@/components/ui/button';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useIsFounder } from '../hooks/useQueries';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
   const { data: isFounder } = useIsFounder();
+  const { isAuthenticated: isAdmin } = useAdminAuth();
   const navigate = useNavigate();
 
   const navLinks = [
@@ -19,7 +22,8 @@ export default function Header() {
       { to: '/sell', label: 'Sell Your Bike' },
       { to: '/my-listings', label: 'My Listings' }
     ] : []),
-    ...(isFounder ? [{ to: '/admin', label: 'Admin Panel' }] : [])
+    ...(isFounder ? [{ to: '/admin', label: 'Admin Panel' }] : []),
+    ...(isAdmin ? [{ to: '/admin', label: 'Admin Panel' }] : []),
   ];
 
   return (
@@ -44,6 +48,13 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate({ to: '/founder-login' })}
+            >
+              Founder Login
+            </Button>
             <LoginButton />
           </nav>
 
@@ -72,6 +83,16 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  navigate({ to: '/founder-login' });
+                }}
+              >
+                Founder Login
+              </Button>
               <div className="pt-2 border-t">
                 <LoginButton />
               </div>

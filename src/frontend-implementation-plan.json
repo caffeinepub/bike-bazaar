@@ -1,123 +1,44 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "PWA Conversion and Founder Admin Panel for 2nd Bike Bajar",
+  "title": "Add Admin Email-Password Authentication and Update About Us Page",
   "requirements": [
     {
-      "id": "REQ-12",
-      "summary": "Convert website to Progressive Web App (PWA) with offline capabilities and home screen installation",
+      "id": "REQ-2",
+      "summary": "Update admin login page to validate credentials against backend email-password authentication system",
       "acceptanceCriteria": [
-        "Web app manifest file exists with proper metadata for 2nd Bike Bajar",
-        "Service worker is registered and caches essential assets",
-        "Users can add the website to their device home screen",
-        "App opens in standalone mode without browser UI when launched from home screen"
+        "Admin login form accepts email and password inputs",
+        "Form submits credentials to backend for validation",
+        "Successful login redirects to admin panel",
+        "Failed login displays appropriate error message"
       ],
       "file_operations": [
         {
-          "path": "frontend/public/manifest.json",
-          "operation": "create",
-          "description": "Create web app manifest with name '2nd Bike Bajar', short_name 'Bike Bajar', description for the second-hand bike marketplace, theme_color '#14b8a6' (teal), background_color '#ffffff', display 'standalone', start_url '/', scope '/', and icons array referencing the generated PWA icons at frontend/public/assets/generated/pwa-icon-192.dim_192x192.png (192x192) and frontend/public/assets/generated/pwa-icon-512.dim_512x512.png (512x512)"
-        },
-        {
-          "path": "frontend/public/service-worker.js",
-          "operation": "create",
-          "description": "Create service worker that listens for install, activate, and fetch events. On install, cache essential static assets including index.html, main.tsx bundle, CSS files, and the generated images (logo.dim_200x200.png, hero-banner.dim_1920x600.png, bike-placeholder.dim_400x300.png, pwa-icon-192.dim_192x192.png, pwa-icon-512.dim_512x512.png). On fetch, implement cache-first strategy for static assets and network-first for API calls. On activate, clean up old caches"
-        },
-        {
-          "path": "frontend/index.html",
+          "path": "frontend/src/pages/AdminLogin.tsx",
           "operation": "modify",
-          "description": "Add manifest link tag in the head section pointing to /manifest.json, add theme-color meta tag with value '#14b8a6', and add apple-touch-icon link tag pointing to frontend/public/assets/generated/pwa-icon-512.dim_512x512.png for iOS devices"
+          "description": "Replace the existing Internet Identity authentication flow with a traditional email-password form. Update the component to use the backend adminLogin method for credential validation. On successful authentication, store the admin session using the existing useAdminAuth hook pattern and redirect to /admin-panel. Display validation errors for incorrect credentials. Remove Internet Identity references from this component since it's admin-specific."
         },
         {
-          "path": "frontend/src/main.tsx",
+          "path": "frontend/src/hooks/useAdminAuth.ts",
           "operation": "modify",
-          "description": "Register the service worker after React root render by checking if 'serviceWorker' in navigator, then calling navigator.serviceWorker.register('/service-worker.js') with error handling. Log registration success or failure to console"
+          "description": "Update the admin authentication hook to support email-password authentication instead of relying solely on Internet Identity. Modify the login function to accept email and password parameters and call the backend adminLogin method. Maintain the existing session storage pattern with 24-hour expiration. Ensure the authentication state correctly reflects email-password based admin sessions."
         }
       ]
     },
     {
-      "id": "REQ-13",
-      "summary": "Create About Us/Founder page displaying founder information with WhatsApp and Instagram links",
+      "id": "REQ-3",
+      "summary": "Update About Us page to display founder details: Anuj Kumar, contact 7828226397, WhatsApp 7828226397, location Bijapur Chhattisgarh 494444",
       "acceptanceCriteria": [
-        "About Us page displays all founder details accurately",
-        "WhatsApp icon opens WhatsApp chat to 7828226397 when clicked",
-        "Instagram icon links to https://www.instagram.com/annujj_03_",
-        "Page design is consistent with the overall theme"
+        "About Us page displays founder name as 'Anuj Kumar'",
+        "Contact number 7828226397 is displayed and clickable",
+        "WhatsApp number 7828226397 is displayed with WhatsApp link",
+        "Location 'Bijapur Chhattisgarh 494444' is displayed"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/AboutUs.tsx",
-          "operation": "create",
-          "description": "Create About Us page component that fetches founder profile using the backend's getFounderProfile() method. Display founder name (Anuj Saha), location (Bijapur, Chhattisgarh), contact number (7828226397), email (rohitmarpalli@gmail.com), and Instagram profile link. Include a WhatsApp icon button that opens WhatsApp chat via 'https://wa.me/917828226397' when clicked. Include an Instagram icon button linking to 'https://www.instagram.com/annujj_03_'. Use Card components from shadcn/ui for layout and maintain theme consistency with teal/orange accent colors. Handle loading and error states"
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Add a new route for the About Us page at path '/about' that renders the AboutUs component. Ensure the route is registered in the TanStack Router configuration alongside existing routes"
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Add 'About Us' navigation link in both desktop and mobile menu arrays pointing to '/about' route. Place it after existing navigation items and before the LoginButton"
-        },
-        {
-          "path": "frontend/src/components/Footer.tsx",
-          "operation": "modify",
-          "description": "Add 'About Us' link to the quick links section in the footer pointing to '/about' route"
-        }
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "summary": "Create Founder Admin Panel page with full marketplace listing management capabilities",
-      "acceptanceCriteria": [
-        "Admin panel page is only visible/accessible to the founder account",
-        "Displays all bike listings in the marketplace",
-        "Provides edit and delete actions for any listing",
-        "Regular buyers cannot access this page"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AdminPanel.tsx",
-          "operation": "create",
-          "description": "Create Admin Panel page component that first checks if the current user is the founder by calling backend's isFounder() method. If not founder, display an access denied message. If founder, fetch all listings using getAllListings() and display them in a table or grid with edit and delete action buttons for each listing. Edit action opens an inline form or modal to update listing details via updateListing(). Delete action calls deleteListing() with confirmation prompt. Include the founder profile editor section (REQ-16 component) at the top of the page. Use authorization component's access control patterns and handle loading/error states"
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Add a new route for the Admin Panel page at path '/admin' that renders the AdminPanel component. Ensure the route is protected and only accessible when user is authenticated"
-        },
-        {
-          "path": "frontend/src/components/Header.tsx",
-          "operation": "modify",
-          "description": "Conditionally add 'Admin Panel' navigation link visible only to the founder. Check if current user is founder by calling backend's isFounder() in a useQuery hook. Display the link in both desktop and mobile menus only when isFounder returns true, pointing to '/admin' route"
-        }
-      ]
-    },
-    {
-      "id": "REQ-16",
-      "summary": "Add founder profile editor in Admin Panel for updating founder details",
-      "acceptanceCriteria": [
-        "Founder can edit their name, address, contact number, email, and Instagram link",
-        "Changes are saved to the backend and persist across sessions",
-        "Updated information appears on the About Us page",
-        "Form validates email format before saving"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/FounderProfileEditor.tsx",
-          "operation": "create",
-          "description": "Create FounderProfileEditor component that fetches current founder profile using getFounderProfile() and displays an editable form with fields for name, address, contactNumber, emailAddress, and instagramProfile. Implement email format validation using HTML5 email input or custom regex. On submit, call backend's updateFounderProfile() with the FounderProfile object containing all updated fields. Use shadcn/ui form components (Input, Button, Label) and react-hook-form for validation. Display success toast on save and handle error states. Invalidate the founder profile cache after successful update"
-        },
-        {
-          "path": "frontend/src/pages/AdminPanel.tsx",
-          "operation": "modify",
-          "description": "Import and render the FounderProfileEditor component at the top of the Admin Panel page, above the listings management section. Wrap it in a Card component with appropriate heading"
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add two new React Query hooks: useGetFounderProfile() to fetch founder profile using actor.getFounderProfile() with queryKey ['founderProfile'], and useUpdateFounderProfile() mutation hook that calls actor.updateFounderProfile(profile) and invalidates ['founderProfile'] cache on success"
+          "description": "Update the founder profile display section to show the exact details: name 'Anuj Kumar', contact number '7828226397' (as a clickable tel: link), WhatsApp number '7828226397' (as a WhatsApp link using wa.me format), and location 'Bijapur Chhattisgarh 494444'. Use the existing getFounderProfile query to fetch this data from the backend. Ensure the layout clearly presents all four pieces of information with appropriate icons and formatting. Maintain the existing loading skeleton pattern while data is being fetched."
         }
       ]
     }

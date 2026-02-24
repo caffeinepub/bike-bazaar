@@ -1,11 +1,15 @@
 import { useState, useMemo } from 'react';
 import { useGetAvailableListings } from '../hooks/useQueries';
+import { useIsBuyerProfileComplete } from '../hooks/useBuyerProfile';
+import { useIsFounder } from '../hooks/useQueries';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import BikeCard from '../components/BikeCard';
 import SearchBar from '../components/SearchBar';
 import BikeFilters from '../components/BikeFilters';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 import type { BikeListing, Condition } from '../backend';
 
 export interface FilterState {
@@ -18,6 +22,10 @@ export interface FilterState {
 }
 
 export default function BikeListings() {
+  const { identity, login, loginStatus } = useInternetIdentity();
+  const isAuthenticated = !!identity;
+  const { data: isFounder } = useIsFounder();
+  const { data: isBuyerProfileComplete, isLoading: profileCheckLoading } = useIsBuyerProfileComplete();
   const { data: listings, isLoading, error } = useGetAvailableListings();
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({
@@ -28,6 +36,8 @@ export default function BikeListings() {
     condition: 'all',
     brand: ''
   });
+
+  const canViewListings = isAuthenticated && (isFounder || isBuyerProfileComplete);
 
   const filteredListings = useMemo(() => {
     if (!listings) return [];
@@ -62,6 +72,29 @@ export default function BikeListings() {
     });
   }, [listings, searchQuery, filters]);
 
+  // Require login before viewing
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="font-display text-4xl font-bold mb-8">Browse Bikes</h1>
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex flex-col gap-4">
+            <p>Please log in to view bike listings.</p>
+            <div>
+              <Button 
+                onClick={() => login()} 
+                disabled={loginStatus === 'logging-in'}
+              >
+                {loginStatus === 'logging-in' ? 'Logging in...' : 'Login to Continue'}
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   if (error) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -75,23 +108,50 @@ export default function BikeListings() {
     );
   }
 
+  if (isAuthenticated && !isFounder && !profileCheckLoading && !isBuyerProfileComplete) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="font-display text-4xl font-bold mb-8">Browse Bikes</h1>
+        <Alert>
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex flex-col gap-4">
+            <p>Please complete your buyer profile to view bike listings.</p>
+            <p className="text-sm text-muted-foreground">
+              The profile setup form will appear automatically. You need to provide your details and upload required documents to access the marketplace.
+            </p>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="font-display text-4xl font-bold mb-8">Browse Bikes</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="flex flex-col lg:flex-row gap-8">
         {/* Filters Sidebar */}
-        <aside className="lg:col-span-1">
-          <div className="sticky top-20 space-y-6">
-            <SearchBar value={searchQuery} onChange={setSearchQuery} />
-            <BikeFilters filters={filters} onFiltersChange={setFilters} />
-          </div>
+        <aside className="lg:w-64 flex-shrink-0">
+          <BikeFilters filters={filters} onFiltersChange={setFilters} />
         </aside>
 
-        {/* Listings Grid */}
-        <div className="lg:col-span-3">
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Main Content */}
+        <div className="flex-1">
+          {/* Search Bar */}
+          <div className="mb-6">
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          </div>
+
+          {/* Results Count */}
+          {!isLoading && canViewListings && (
+            <p className="text-sm text-muted-foreground mb-4">
+              {filteredListings.length} {filteredListings.length === 1 ? 'bike' : 'bikes'} found
+            </p>
+          )}
+
+          {/* Listings Grid */}
+          {isLoading || profileCheckLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[1, 2, 3, 4, 5, 6].map((i) => (
                 <div key={i} className="space-y-3">
                   <Skeleton className="h-48 w-full rounded-lg" />
@@ -100,22 +160,17 @@ export default function BikeListings() {
                 </div>
               ))}
             </div>
-          ) : filteredListings.length > 0 ? (
-            <>
-              <p className="text-sm text-muted-foreground mb-4">
-                Showing {filteredListings.length} {filteredListings.length === 1 ? 'bike' : 'bikes'}
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredListings.map((listing) => (
-                  <BikeCard key={listing.id} listing={listing} />
-                ))}
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-12">
+          ) : canViewListings && filteredListings.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredListings.map((listing) => (
+                <BikeCard key={listing.id} listing={listing} />
+              ))}
+            </div>
+          ) : canViewListings ? (
+            <div className="text-center py-12 bg-muted/30 rounded-lg">
               <p className="text-muted-foreground">No bikes match your search criteria.</p>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

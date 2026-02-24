@@ -10,6 +10,12 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface AnalyticsData {
+  'activeListings' : bigint,
+  'totalVisitors' : bigint,
+  'usageStats' : Array<UsageStat>,
+  'registeredUsers' : bigint,
+}
 export interface BikeListing {
   'id' : string,
   'model' : string,
@@ -25,9 +31,23 @@ export interface BikeListing {
   'price' : bigint,
   'condition' : Condition,
 }
+export interface BuyerProfile {
+  'aadhaarDocument' : [] | [ExternalBlob],
+  'createdAt' : bigint,
+  'profilePhoto' : [] | [ExternalBlob],
+  'panDocument' : [] | [ExternalBlob],
+  'fullName' : string,
+  'isProfileComplete' : boolean,
+  'email' : string,
+  'address' : string,
+  'panNumber' : string,
+  'aadhaarNumber' : string,
+  'phoneNumber' : string,
+}
 export type Condition = { 'fair' : null } |
   { 'good' : null } |
   { 'excellent' : null };
+export type ExternalBlob = Uint8Array;
 export interface FounderProfile {
   'instagramProfile' : string,
   'name' : string,
@@ -43,10 +63,21 @@ export interface Message {
   'timestamp' : bigint,
   'receiver' : Principal,
 }
+export interface UsageStat {
+  'visitors' : bigint,
+  'listings' : bigint,
+  'timestamp' : bigint,
+  'users' : bigint,
+}
 export interface UserProfile { 'contactInfo' : string, 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
+export interface WebsiteContent {
+  'heroSection' : string,
+  'aboutPage' : string,
+  'footerInfo' : string,
+}
 export interface _CaffeineStorageCreateCertificateResult {
   'method' : string,
   'blob_hash' : string,
@@ -75,7 +106,14 @@ export interface _SERVICE {
   >,
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addUsageStat' : ActorMethod<[UsageStat], undefined>,
+  'adminLogin' : ActorMethod<[string, string], boolean>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'completeBuyerProfile' : ActorMethod<[], undefined>,
+  'createBuyerProfile' : ActorMethod<
+    [string, string, string, string, string, string],
+    undefined
+  >,
   'createListing' : ActorMethod<
     [
       string,
@@ -91,16 +129,22 @@ export interface _SERVICE {
     string
   >,
   'deleteListing' : ActorMethod<[string], undefined>,
+  'getAllBuyerProfiles' : ActorMethod<[], Array<BuyerProfile>>,
   'getAllListings' : ActorMethod<[], Array<BikeListing>>,
+  'getAnalyticsData' : ActorMethod<[], AnalyticsData>,
   'getAvailableListings' : ActorMethod<[], Array<BikeListing>>,
+  'getBuyerProfile' : ActorMethod<[Principal], [] | [BuyerProfile]>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getFounderProfile' : ActorMethod<[], [] | [FounderProfile]>,
   'getListing' : ActorMethod<[string], BikeListing>,
   'getMessagesForListing' : ActorMethod<[string], Array<Message>>,
+  'getMyBuyerProfile' : ActorMethod<[], [] | [BuyerProfile]>,
   'getMyListings' : ActorMethod<[], Array<BikeListing>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getWebsiteContent' : ActorMethod<[], WebsiteContent>,
   'initializeFounder' : ActorMethod<[], undefined>,
+  'isBuyerProfileComplete' : ActorMethod<[], boolean>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'isFounder' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
@@ -127,6 +171,10 @@ export interface _SERVICE {
     ],
     undefined
   >,
+  'updateWebsiteContent' : ActorMethod<[WebsiteContent], undefined>,
+  'uploadAadhaarDocument' : ActorMethod<[ExternalBlob], undefined>,
+  'uploadPanDocument' : ActorMethod<[ExternalBlob], undefined>,
+  'uploadProfilePhoto' : ActorMethod<[ExternalBlob], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

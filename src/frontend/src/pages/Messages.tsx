@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetListing, useGetMessages, useSendMessage } from '../hooks/useQueries';
+import { useGetListing, useGetMessagesForListing, useSendMessage } from '../hooks/useQueries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,7 +16,7 @@ export default function Messages() {
   const isAuthenticated = !!identity;
 
   const { data: listing, isLoading: listingLoading } = useGetListing(listingId);
-  const { data: messages, isLoading: messagesLoading } = useGetMessages(listingId);
+  const { data: messages, isLoading: messagesLoading } = useGetMessagesForListing(listingId);
   const { mutate: sendMessage, isPending: isSending } = useSendMessage();
 
   if (!isAuthenticated) {
@@ -74,7 +74,7 @@ export default function Messages() {
       <Button
         variant="ghost"
         className="mb-6 gap-2"
-        onClick={() => navigate({ to: '/listings/$id', params: { id: listingId } })}
+        onClick={() => navigate({ to: '/bike/$id', params: { id: listingId } })}
       >
         <ArrowLeft className="h-4 w-4" />
         Back to Listing
@@ -97,7 +97,7 @@ export default function Messages() {
               {listing.brand} {listing.model}
             </p>
             <p className="text-xl font-bold text-primary">
-              ${Number(listing.price).toLocaleString()}
+              ₹{Number(listing.price).toLocaleString()}
             </p>
           </CardContent>
         </Card>
